@@ -1,18 +1,17 @@
-FROM node:lts-alpine
+FROM nginx:stable-alpine
 
-RUN npm install -g http-server
+COPY  ./nginx.conf /etc/nginx/conf.d/default.conf
 
-WORKDIR .
+WORKDIR /app
 
-COPY package*.json ./
+ADD . .
 
-RUN npm install
+RUN yarn
 
-COPY . .
+RUN yarn run build
 
-RUN npm run build
+COPY /app/dist /usr/share/nginx/html
 
 EXPOSE 8080
 
-CMD ["http-server", "dist"]
-
+CMD ["nginx", "-g", "daemon off;"]
