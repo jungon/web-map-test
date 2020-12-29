@@ -58,19 +58,22 @@ export default {
 
   methods: {
     cycleMarker() {
-      let length = this.state.markers.length + 100;
-      if (length > 1000) {
-        length = 0;
-      }
+      const length = this.state.markers.length;
+      if (length + 100 > 1000) {
+        this.state.markers.forEach((marker) => {
+          marker.setMap(null);
+        });
 
-      this.state.markers = [];
+        this.state.markers = [];
+        return;
+      }
 
       const naver = window.naver;
 
       const latExtent = 0.1;
       const lngExtent = 0.1;
 
-      for (let i = 0; i < length; i++) {
+      for (let i = length; i < length + 100; i++) {
         this.state.markers[i] = new naver.maps.Marker({
           position: new naver.maps.LatLng(
             Math.random() * latExtent + 37.579675,
